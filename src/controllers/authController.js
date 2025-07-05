@@ -16,7 +16,7 @@ async function handleOwnerLogin(req, res) {
 
         // set refresh token cookie in the response
         // send the access token in the response data
-        res.cookie('ownerRefreshToken', ownerRefreshToken, { httpOnly: true }); // httpOnly to prevent client-side JavaScript from accessing the cookie
+        res.cookie('ownerRefreshToken', ownerRefreshToken, { httpOnly: true, sameSite: 'None', secure: true }); // httpOnly to prevent client-side JavaScript from accessing the cookie
         res.status(200).json({ ownerAccessToken });
     } catch (error) {
         console.error('Error handling owner login:', error);
@@ -148,7 +148,7 @@ async function handleManagerLogout(req, res) {
         const response = await authServices.handleManagerLogout(userId);
 
         // remove the refresh token cookie from the response
-        res.clearCookie('managerRefreshToken', { httpOnly: true });
+        res.clearCookie('managerRefreshToken', { httpOnly: true, sameSite: 'None', secure: true });
         res.status(200).json(response);
     } catch (error) {
         console.error('Error handling manager logout:', error);
