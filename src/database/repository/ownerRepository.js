@@ -1,4 +1,4 @@
-const Owner = require('../models/ownerModel');
+const Owner = require('../models/OwnerModel');
 const bcrypt = require('bcrypt');
 
 async function verifyOwnerCredentials(userId, password) {
