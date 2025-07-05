@@ -1,0 +1,45 @@
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+const bcrypt = require('bcrypt');
+
+const managerSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    userId: {
+        type: String,
+        required: true,
+        unique: true,
+        index: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        index: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    country: {
+        type: Schema.Types.ObjectId,
+        ref: 'Country',
+        required: true
+    },
+});
+
+// This middleware function is called before saving a manager document
+// It ensures that the password is hashed before saving it to the database.
+managerSchema.pre('save', async function(next) {
+    if (this.isModified('password')) {
+        const saltRounds = parseInt(process.env.PASSWORD_HASH_SALT_ROUNDS) || 10;
+        this.password = await bcrypt.hash(this.password, saltRounds);
+    }
+    next();
+});
+
+const Manager = mongoose.model('Manager', managerSchema);
+module.exports = Manager;
+// This model represents a manager user in the system, with fields for name, email, and password: is hashed before saving.
